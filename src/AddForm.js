@@ -1,11 +1,11 @@
-import { collection } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
-import { db } from "../firebase";
+import { db } from "./firebase";
 
 const AddForm = () => {
-  const [productName, setProductName] = useState("");
-  const [brand, setBrand] = useState("");
-  const [price, setPrice] = useState("");
+  const [productName, setProductName] = useState();
+  const [brand, setBrand] = useState();
+  const [price, setPrice] = useState();
   const [catOptions, setCatOptions] = useState([
     "TV/Monitors",
     "PC",
@@ -13,8 +13,8 @@ const AddForm = () => {
     "Phones",
     "Other",
   ]);
-  const [category, setCategory] = useState("");
-  const [weight, setWeight] = useState("");
+  const [category, setCategory] = useState("TV/Monitors");
+  const [weight, setWeight] = useState();
   const [colorOptions, setColorOptions] = useState([
     "Black",
     "White",
@@ -22,9 +22,9 @@ const AddForm = () => {
     "Blue",
     "Other",
   ]);
-  const [color, setColor] = useState("");
-  const [availableOptions, setAvailableOptions] = useState(["Yes", "No"])
-  const [available, setAvailable] = useState("");
+  const [color, setColor] = useState("Black");
+  const [availableOptions, setAvailableOptions] = useState(["Yes", "No"]);
+  const [isAvailable, setIsAvailable] = useState("Yes");
 
   // Categories
   const categories = catOptions.map((category) => category);
@@ -35,14 +35,33 @@ const AddForm = () => {
   const handleColorChange = (e) => setColor(colorOptions[e.target.value]);
 
   // Available
-  const choices = availableOptions.map((choice) => choice)
-  const handleAvailableChange = (e) => setAvailable(availableOptions[e.target.value])
-
+  const choices = availableOptions.map((choice) => choice);
+  const handleAvailableChange = (e) =>
+    setIsAvailable(availableOptions[e.target.value]);
 
   // ======= Database Part =======
 
   // create a db reference
-  const dbRef = collection(db, "Products")
+  const dbRef = collection(db, "Products");
+
+  // Store data to database
+  const addDataFunc = async () => {
+    try {
+      await addDoc(dbRef, {
+        ProductName: productName,
+        Brand: brand,
+        Price: price,
+        Category: category,
+        Weight: weight,
+        Color: color,
+        isAvailable: isAvailable,
+      });
+      alert("Data added successfully");
+      window.location.reload();
+    } catch (error) {
+      alert(error, "An error occurred");
+    }
+  };
   return (
     <div>
       <section className="bg-white">
@@ -50,7 +69,7 @@ const AddForm = () => {
           <h2 className="mb-4 text-xl font-bold text-gray-900">
             Add a new product
           </h2>
-          <form action="#">
+          <div>
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
               <div className="sm:col-span-2">
                 <label
@@ -179,10 +198,11 @@ const AddForm = () => {
             <button
               type="submit"
               className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+              onClick={addDataFunc}
             >
               Add product
             </button>
-          </form>
+          </div>
         </div>
       </section>
     </div>
