@@ -1,6 +1,48 @@
-import React from "react";
+import { collection } from "firebase/firestore";
+import React, { useState } from "react";
+import { db } from "../firebase";
 
 const AddForm = () => {
+  const [productName, setProductName] = useState("");
+  const [brand, setBrand] = useState("");
+  const [price, setPrice] = useState("");
+  const [catOptions, setCatOptions] = useState([
+    "TV/Monitors",
+    "PC",
+    "Gaming/Console",
+    "Phones",
+    "Other",
+  ]);
+  const [category, setCategory] = useState("");
+  const [weight, setWeight] = useState("");
+  const [colorOptions, setColorOptions] = useState([
+    "Black",
+    "White",
+    "Silver",
+    "Blue",
+    "Other",
+  ]);
+  const [color, setColor] = useState("");
+  const [availableOptions, setAvailableOptions] = useState(["Yes", "No"])
+  const [available, setAvailable] = useState("");
+
+  // Categories
+  const categories = catOptions.map((category) => category);
+  const handleCategoryChange = (e) => setCategory(catOptions[e.target.value]);
+
+  // Colors
+  const colors = colorOptions.map((color) => color);
+  const handleColorChange = (e) => setColor(colorOptions[e.target.value]);
+
+  // Available
+  const choices = availableOptions.map((choice) => choice)
+  const handleAvailableChange = (e) => setAvailable(availableOptions[e.target.value])
+
+
+  // ======= Database Part =======
+
+  // create a db reference
+  const dbRef = collection(db, "Products")
   return (
     <div>
       <section className="bg-white">
@@ -23,6 +65,8 @@ const AddForm = () => {
                   id="name"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   placeholder="Type product name"
+                  value={productName}
+                  onChange={(e) => setProductName(e.target.value)}
                   required
                 />
               </div>
@@ -39,6 +83,8 @@ const AddForm = () => {
                   id="brand"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg   block w-full p-2.5"
                   placeholder="Product brand"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
                   required
                 />
               </div>
@@ -55,6 +101,8 @@ const AddForm = () => {
                   id="price"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg   block w-full p-2.5"
                   placeholder="$2999"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
                   required
                 />
               </div>
@@ -68,12 +116,11 @@ const AddForm = () => {
                 <select
                   id="category"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                  onChange={(e) => handleCategoryChange(e)}
                 >
-                  <option selected="">Select category</option>
-                  <option value="TV">TV/Monitors</option>
-                  <option value="PC">PC</option>
-                  <option value="GA">Gaming/Console</option>
-                  <option value="PH">Phones</option>
+                  {categories.map((category, key) => (
+                    <option value={key}>{category}</option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -89,6 +136,8 @@ const AddForm = () => {
                   id="item-weight"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg   block w-full p-2.5"
                   placeholder="12"
+                  value={weight}
+                  onChange={(e) => setWeight(e.target.value)}
                   required
                 />
               </div>
@@ -102,13 +151,11 @@ const AddForm = () => {
                 <select
                   id="color"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                  onChange={(e) => handleColorChange(e)}
                 >
-                  <option selected="">Select color</option>
-                  <option value="TV">Black</option>
-                  <option value="PC">White</option>
-                  <option value="GA">Silver</option>
-                  <option value="PH">Blue</option>
-                  <option value="PH">Other</option>
+                  {colors.map((color, key) => (
+                    <option value={key}>{color}</option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -121,9 +168,11 @@ const AddForm = () => {
                 <select
                   id="available"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                  onChange={(e) => handleAvailableChange(e)}
                 >
-                  <option value="TV">Yes</option>
-                  <option value="PC">No</option>
+                  {choices.map((choice, key) => (
+                    <option value={key}>{choice}</option>
+                  ))}
                 </select>
               </div>
             </div>
