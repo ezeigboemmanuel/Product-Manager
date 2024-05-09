@@ -121,7 +121,7 @@ const DisplayData = ({
               <th scope="col" className="px-6 py-3">
                 Weight(kg)
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3 forPrint">
                 Action
               </th>
             </tr>
@@ -145,16 +145,16 @@ const DisplayData = ({
                   <td className="px-6 py-4">{data.isAvailable}</td>
                   <td className="px-6 py-4">${data.Price}</td>
                   <td className="px-6 py-4">{data.Weight}</td>
-                  <td className="flex items-center px-6 py-4">
+                  <td className="flex items-center px-6 py-4 forPrint">
                     <span
                       onClick={() => editData(data.id)}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer forPrint"
                     >
                       Edit
                     </span>
                     <span
                       onClick={() => deleteData(data.id)}
-                      className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3 cursor-pointer"
+                      className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3 cursor-pointer forPrint"
                     >
                       Delete
                     </span>
