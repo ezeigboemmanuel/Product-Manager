@@ -10,6 +10,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { db } from "./firebase";
 import toast from "react-hot-toast";
 import { useReactToPrint } from "react-to-print";
+import { useNavigate } from "react-router-dom";
 
 const DisplayData = ({
   productName,
@@ -31,6 +32,8 @@ const DisplayData = ({
   data,
   setData,
 }) => {
+
+  const navigate = useNavigate();
   // Create Database Reference
   const dbRef = collection(db, "Products");
   const fetch = async () => {
@@ -52,7 +55,7 @@ const DisplayData = ({
     const matchId = data.find((data) => {
       return data.id === id;
     });
-
+    navigate("/addproduct")
     setProductName(matchId.ProductName);
     setBrand(matchId.Brand);
     setPrice(matchId.Price);

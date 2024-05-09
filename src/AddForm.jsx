@@ -1,7 +1,14 @@
-import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import React, { useState } from "react";
 import { db } from "./firebase";
 import toast from "react-hot-toast";
+import { useNavigate } from 'react-router-dom';
 
 const AddForm = ({
   productName,
@@ -23,6 +30,7 @@ const AddForm = ({
   data,
   setData,
 }) => {
+  const navigate = useNavigate();
   // Categories
   const handleCategoryChange = (e) => setCategory(e.target.value);
 
@@ -50,13 +58,11 @@ const AddForm = ({
         Weight: weight,
         Color: color,
         isAvailable: isAvailable,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       }).then(() => {
         toast.success("Product added successfully");
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, "5000");
+      navigate('/products')
     } catch (error) {
       alert(error, "An error occurred");
     }
@@ -74,13 +80,11 @@ const AddForm = ({
         Weight: weight,
         Color: color,
         isAvailable: isAvailable,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       }).then(() => {
         toast.success("Product updated successfully");
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, "5000");
+      navigate('/products')
     } catch (error) {
       alert(error, "An error occurred");
     }
@@ -90,7 +94,7 @@ const AddForm = ({
       <section className="bg-white">
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-gray-900">
-            Add a new product
+          {data.id == id ? "Add a new product" : "Update product"}
           </h2>
           <div>
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
