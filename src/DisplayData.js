@@ -1,7 +1,15 @@
-import { collection, deleteDoc, doc, getDocs, query, orderBy } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  orderBy,
+} from "firebase/firestore";
+import React, { useEffect, useRef, useState } from "react";
 import { db } from "./firebase";
 import toast from "react-hot-toast";
+import { useReactToPrint } from "react-to-print";
 
 const DisplayData = ({
   productName,
@@ -21,10 +29,8 @@ const DisplayData = ({
   id,
   setId,
   data,
-  setData
+  setData,
 }) => {
-  
-
   // Create Database Reference
   const dbRef = collection(db, "Products");
   const fetch = async () => {
@@ -44,18 +50,18 @@ const DisplayData = ({
   // Edit data
   const editData = async (id) => {
     const matchId = data.find((data) => {
-      return data.id === id
-    })
+      return data.id === id;
+    });
 
-    setProductName(matchId.ProductName)
-    setBrand(matchId.Brand)
-    setPrice(matchId.Price)
-    setCategory(matchId.Category)
-    setWeight(matchId.Weight)
-    setColor(matchId.Color)
-    setIsAvailable(matchId.isAvailable)
-    setId(matchId.id)
-  }
+    setProductName(matchId.ProductName);
+    setBrand(matchId.Brand);
+    setPrice(matchId.Price);
+    setCategory(matchId.Category);
+    setWeight(matchId.Weight);
+    setColor(matchId.Color);
+    setIsAvailable(matchId.isAvailable);
+    setId(matchId.id);
+  };
 
   // Delete data from database
   const deleteData = async (id) => {
@@ -68,12 +74,29 @@ const DisplayData = ({
         window.location.reload();
       }, "5000");
     } catch (error) {
-      alert(error)
+      alert(error);
     }
-  }
+  };
+
+  // For printing
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
   return (
     <div>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mb-20">
+      <style type="text/css" media="print">
+        {
+          "\
+  @page { size: landscape; }\
+"
+        }
+      </style>
+      <div
+        ref={componentRef}
+        className="relative overflow-x-auto shadow-md sm:rounded-lg mb-20"
+      >
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
@@ -106,7 +129,10 @@ const DisplayData = ({
           <tbody>
             {data.map((data) => {
               return (
-                <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600" key={data.id}>
+                <tr
+                  className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600"
+                  key={data.id}
+                >
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
@@ -120,10 +146,16 @@ const DisplayData = ({
                   <td className="px-6 py-4">${data.Price}</td>
                   <td className="px-6 py-4">{data.Weight}</td>
                   <td className="flex items-center px-6 py-4">
-                    <span onClick={() => editData(data.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                    <span
+                      onClick={() => editData(data.id)}
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                    >
                       Edit
                     </span>
-                    <span onClick={() => deleteData(data.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3 cursor-pointer">
+                    <span
+                      onClick={() => deleteData(data.id)}
+                      className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3 cursor-pointer"
+                    >
                       Delete
                     </span>
                   </td>
@@ -133,6 +165,14 @@ const DisplayData = ({
           </tbody>
         </table>
       </div>
+
+      <button
+        type="submit"
+        className=" items-center -mt-8 mb-5 ml-2 px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+        onClick={handlePrint}
+      >
+        Print
+      </button>
     </div>
   );
 };
