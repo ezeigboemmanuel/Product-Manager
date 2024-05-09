@@ -1,6 +1,7 @@
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { db } from "./firebase";
+import toast from "react-hot-toast";
 
 const AddForm = ({
   productName,
@@ -49,9 +50,13 @@ const AddForm = ({
         Weight: weight,
         Color: color,
         isAvailable: isAvailable,
+        createdAt: serverTimestamp()
+      }).then(() => {
+        toast.success("Product added successfully");
       });
-      alert("Data added successfully");
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, "5000");
     } catch (error) {
       alert(error, "An error occurred");
     }
@@ -60,7 +65,7 @@ const AddForm = ({
   // Update Data
   const updateData = async () => {
     try {
-      const updateRef = doc(dbRef, id)
+      const updateRef = doc(dbRef, id);
       await updateDoc(updateRef, {
         ProductName: productName,
         Brand: brand,
@@ -69,13 +74,17 @@ const AddForm = ({
         Weight: weight,
         Color: color,
         isAvailable: isAvailable,
-      })
-      alert("Data updated successfully")
-      window.location.reload();
+        createdAt: serverTimestamp()
+      }).then(() => {
+        toast.success("Product updated successfully");
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, "5000");
     } catch (error) {
       alert(error, "An error occurred");
     }
-  }
+  };
   return (
     <div>
       <section className="bg-white">

@@ -2,6 +2,7 @@ import "./globals.css";
 import React, { useState } from "react";
 import AddForm from "./AddForm";
 import DisplayData from "./DisplayData";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const [productName, setProductName] = useState();
@@ -15,6 +16,8 @@ const App = () => {
   const [data, setData] = useState([]);
   return (
     <div className="">
+      <Toaster position="top-right" />
+      <p className="mt-4 ml-4">Made by <a href="https://twitter.com/zgbocode" className="text-blue-500 underline">Ezeigbo Emmanuel</a></p>
       <AddForm
         productName={productName}
         setProductName={setProductName}

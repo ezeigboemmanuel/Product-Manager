@@ -1,6 +1,7 @@
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, orderBy } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "./firebase";
+import toast from "react-hot-toast";
 
 const DisplayData = ({
   productName,
@@ -27,7 +28,7 @@ const DisplayData = ({
   // Create Database Reference
   const dbRef = collection(db, "Products");
   const fetch = async () => {
-    const snapshot = await getDocs(dbRef);
+    const snapshot = await getDocs(query(dbRef, orderBy("createdAt", "desc")));
     const fetchData = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -60,9 +61,12 @@ const DisplayData = ({
   const deleteData = async (id) => {
     const delRef = doc(dbRef, id);
     try {
-      await deleteDoc(delRef)
-      alert("Deleted successfully")
-      window.location.reload()
+      await deleteDoc(delRef).then(() => {
+        toast.error("Product deleted successfully");
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, "5000");
     } catch (error) {
       alert(error)
     }
@@ -120,7 +124,7 @@ const DisplayData = ({
                       Edit
                     </span>
                     <span onClick={() => deleteData(data.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3 cursor-pointer">
-                      Remove
+                      Delete
                     </span>
                   </td>
                 </tr>
