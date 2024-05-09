@@ -1,43 +1,37 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { db } from "./firebase";
 
-const AddForm = () => {
-  const [productName, setProductName] = useState();
-  const [brand, setBrand] = useState();
-  const [price, setPrice] = useState();
-  const [catOptions, setCatOptions] = useState([
-    "TV/Monitors",
-    "PC",
-    "Gaming/Console",
-    "Phones",
-    "Other",
-  ]);
-  const [category, setCategory] = useState("TV/Monitors");
-  const [weight, setWeight] = useState();
-  const [colorOptions, setColorOptions] = useState([
-    "Black",
-    "White",
-    "Silver",
-    "Blue",
-    "Other",
-  ]);
-  const [color, setColor] = useState("Black");
-  const [availableOptions, setAvailableOptions] = useState(["Yes", "No"]);
-  const [isAvailable, setIsAvailable] = useState("Yes");
-
+const AddForm = ({
+  productName,
+  setProductName,
+  brand,
+  setBrand,
+  price,
+  setPrice,
+  category,
+  setCategory,
+  weight,
+  setWeight,
+  color,
+  setColor,
+  isAvailable,
+  setIsAvailable,
+  id,
+  setId,
+  data,
+  setData,
+}) => {
   // Categories
-  const categories = catOptions.map((category) => category);
-  const handleCategoryChange = (e) => setCategory(catOptions[e.target.value]);
+  const handleCategoryChange = (e) => setCategory(e.target.value);
+
+  console.log("Category", category);
 
   // Colors
-  const colors = colorOptions.map((color) => color);
-  const handleColorChange = (e) => setColor(colorOptions[e.target.value]);
+  const handleColorChange = (e) => setColor(e.target.value);
 
   // Available
-  const choices = availableOptions.map((choice) => choice);
-  const handleAvailableChange = (e) =>
-    setIsAvailable(availableOptions[e.target.value]);
+  const handleAvailableChange = (e) => setIsAvailable(e.target.value);
 
   // ======= Database Part =======
 
@@ -62,6 +56,26 @@ const AddForm = () => {
       alert(error, "An error occurred");
     }
   };
+
+  // Update Data
+  const updateData = async () => {
+    try {
+      const updateRef = doc(dbRef, id)
+      await updateDoc(updateRef, {
+        ProductName: productName,
+        Brand: brand,
+        Price: price,
+        Category: category,
+        Weight: weight,
+        Color: color,
+        isAvailable: isAvailable,
+      })
+      alert("Data updated successfully")
+      window.location.reload();
+    } catch (error) {
+      alert(error, "An error occurred");
+    }
+  }
   return (
     <div>
       <section className="bg-white">
@@ -134,12 +148,15 @@ const AddForm = () => {
                 </label>
                 <select
                   id="category"
+                  value={category}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   onChange={(e) => handleCategoryChange(e)}
                 >
-                  {categories.map((category, key) => (
-                    <option value={key}>{category}</option>
-                  ))}
+                  <option value="TV/Monitors">TV/Monitors</option>
+                  <option value="PC">PC</option>
+                  <option value="Gaming/Console">Gaming/Console</option>
+                  <option value="Phones">Phones</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
               <div>
@@ -169,12 +186,15 @@ const AddForm = () => {
                 </label>
                 <select
                   id="color"
+                  value={color}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   onChange={(e) => handleColorChange(e)}
                 >
-                  {colors.map((color, key) => (
-                    <option value={key}>{color}</option>
-                  ))}
+                  <option value="Black">Black</option>
+                  <option value="White">White</option>
+                  <option value="Silver">Silver</option>
+                  <option value="Blue">Blue</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
               <div>
@@ -186,21 +206,21 @@ const AddForm = () => {
                 </label>
                 <select
                   id="available"
+                  value={isAvailable}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                   onChange={(e) => handleAvailableChange(e)}
                 >
-                  {choices.map((choice, key) => (
-                    <option value={key}>{choice}</option>
-                  ))}
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
                 </select>
               </div>
             </div>
             <button
               type="submit"
               className="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
-              onClick={addDataFunc}
+              onClick={data.id == id ? addDataFunc : updateData}
             >
-              Add product
+              {data.id == id ? "Add " : "Update "}product
             </button>
           </div>
         </div>

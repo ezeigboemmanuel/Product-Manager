@@ -1,9 +1,28 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "./firebase";
 
-const DisplayData = () => {
-  const [data, setData] = useState([]);
+const DisplayData = ({
+  productName,
+  setProductName,
+  brand,
+  setBrand,
+  price,
+  setPrice,
+  category,
+  setCategory,
+  weight,
+  setWeight,
+  color,
+  setColor,
+  isAvailable,
+  setIsAvailable,
+  id,
+  setId,
+  data,
+  setData
+}) => {
+  
 
   // Create Database Reference
   const dbRef = collection(db, "Products");
@@ -15,10 +34,39 @@ const DisplayData = () => {
     }));
     setData(fetchData);
   };
+
+  // Use effect to call it once
   useEffect(() => {
     fetch();
   }, []);
 
+  // Edit data
+  const editData = async (id) => {
+    const matchId = data.find((data) => {
+      return data.id === id
+    })
+
+    setProductName(matchId.ProductName)
+    setBrand(matchId.Brand)
+    setPrice(matchId.Price)
+    setCategory(matchId.Category)
+    setWeight(matchId.Weight)
+    setColor(matchId.Color)
+    setIsAvailable(matchId.isAvailable)
+    setId(matchId.id)
+  }
+
+  // Delete data from database
+  const deleteData = async (id) => {
+    const delRef = doc(dbRef, id);
+    try {
+      await deleteDoc(delRef)
+      alert("Deleted successfully")
+      window.location.reload()
+    } catch (error) {
+      alert(error)
+    }
+  }
   return (
     <div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg mb-20">
@@ -68,10 +116,10 @@ const DisplayData = () => {
                   <td className="px-6 py-4">${data.Price}</td>
                   <td className="px-6 py-4">{data.Weight}</td>
                   <td className="flex items-center px-6 py-4">
-                    <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                    <span onClick={() => editData(data.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
                       Edit
                     </span>
-                    <span className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3 cursor-pointer">
+                    <span onClick={() => deleteData(data.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3 cursor-pointer">
                       Remove
                     </span>
                   </td>
