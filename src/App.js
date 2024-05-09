@@ -19,7 +19,6 @@ const App = () => {
   return (
     <div className="">
       <Toaster position="top-right" />
-
       <Router>
         <Routes>
           <Route path="/" exact element={<Auth />} />
