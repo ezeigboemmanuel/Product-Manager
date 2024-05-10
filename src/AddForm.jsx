@@ -8,8 +8,8 @@ import {
 import React, { useState } from "react";
 import { db } from "./firebase";
 import toast from "react-hot-toast";
-import { useNavigate } from 'react-router-dom';
-import {useGetUserInfo} from "./hooks/useGetUserInfo"
+import { useNavigate } from "react-router-dom";
+import { useGetUserInfo } from "./hooks/useGetUserInfo";
 
 const AddForm = ({
   productName,
@@ -31,8 +31,11 @@ const AddForm = ({
   data,
   setData,
 }) => {
-  const {userEmail} = useGetUserInfo()
+  const { userEmail, userId } = useGetUserInfo();
   const navigate = useNavigate();
+  if (!userId) {
+    navigate("/");
+  }
   // Categories
   const handleCategoryChange = (e) => setCategory(e.target.value);
 
@@ -53,6 +56,7 @@ const AddForm = ({
   const addDataFunc = async () => {
     try {
       await addDoc(dbRef, {
+        userId: userId,
         ProductName: productName,
         Brand: brand,
         Price: price,
@@ -64,7 +68,7 @@ const AddForm = ({
       }).then(() => {
         toast.success("Product added successfully");
       });
-      navigate('/products')
+      navigate("/products");
     } catch (error) {
       alert(error, "An error occurred");
     }
@@ -75,6 +79,7 @@ const AddForm = ({
     try {
       const updateRef = doc(dbRef, id);
       await updateDoc(updateRef, {
+        userId: userId,
         ProductName: productName,
         Brand: brand,
         Price: price,
@@ -86,7 +91,7 @@ const AddForm = ({
       }).then(() => {
         toast.success("Product updated successfully");
       });
-      navigate('/products')
+      navigate("/products");
     } catch (error) {
       alert(error, "An error occurred");
     }
@@ -96,7 +101,7 @@ const AddForm = ({
       <section className="bg-white">
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-gray-900">
-          {data.id == id ? "Add a new product" : "Update product"}
+            {data.id == id ? "Add a new product" : "Update product"}
           </h2>
           <div>
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
