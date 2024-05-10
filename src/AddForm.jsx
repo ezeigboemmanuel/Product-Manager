@@ -6,10 +6,11 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import React, { useState } from "react";
-import { db } from "./firebase";
+import { auth, db } from "./firebase";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
+import { signOut } from "firebase/auth";
 
 const AddForm = ({
   productName,
@@ -38,8 +39,6 @@ const AddForm = ({
   }
   // Categories
   const handleCategoryChange = (e) => setCategory(e.target.value);
-
-  console.log("Category", category);
 
   // Colors
   const handleColorChange = (e) => setColor(e.target.value);
@@ -96,8 +95,19 @@ const AddForm = ({
       alert(error, "An error occurred");
     }
   };
+
+  const signUserOut = async () => {
+    try {
+      await signOut(auth);
+      localStorage.clear();
+      navigate("/");
+    } catch (error) {
+      console.log(error, "An error occured while signing out");
+    }
+  };
   return (
     <div>
+      <button onClick={signUserOut}>Sign Out</button>
       <section className="bg-white">
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-gray-900">

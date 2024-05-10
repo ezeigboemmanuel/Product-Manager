@@ -8,11 +8,12 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
-import { db } from "./firebase";
+import { auth, db } from "./firebase";
 import toast from "react-hot-toast";
 import { useReactToPrint } from "react-to-print";
 import { useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
+import { signOut } from "firebase/auth";
 
 const DisplayData = ({
   productName,
@@ -37,8 +38,8 @@ const DisplayData = ({
   const { userEmail, userId } = useGetUserInfo();
   const navigate = useNavigate();
   // Create Database Reference
-  if(!userId){
-    navigate("/")
+  if (!userId) {
+    navigate("/");
   }
   const dbRef = collection(db, "Users", userEmail, "Products");
   const fetch = async () => {
@@ -94,6 +95,17 @@ const DisplayData = ({
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
+
+  const signUserOut = async () => {
+    try {
+      await signOut(auth);
+      localStorage.clear();
+      navigate("/");
+    } catch (error) {
+      console.log(error, "An error occured while signing out");
+    }
+  };
+
   return (
     <div>
       <style type="text/css" media="print">
@@ -103,6 +115,7 @@ const DisplayData = ({
 "
         }
       </style>
+      <button onClick={signUserOut}>Sign Out</button>
       <div
         ref={componentRef}
         className="relative overflow-x-auto shadow-md sm:rounded-lg mb-20"
