@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { db } from "./firebase";
 import toast from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
+import {useGetUserInfo} from "./hooks/useGetUserInfo"
 
 const AddForm = ({
   productName,
@@ -30,6 +31,7 @@ const AddForm = ({
   data,
   setData,
 }) => {
+  const {userEmail} = useGetUserInfo()
   const navigate = useNavigate();
   // Categories
   const handleCategoryChange = (e) => setCategory(e.target.value);
@@ -45,7 +47,7 @@ const AddForm = ({
   // ======= Database Part =======
 
   // create a db reference
-  const dbRef = collection(db, "Products");
+  const dbRef = collection(db, "Users", userEmail, "Products");
 
   // Store data to database
   const addDataFunc = async () => {

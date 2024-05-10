@@ -11,6 +11,7 @@ import { db } from "./firebase";
 import toast from "react-hot-toast";
 import { useReactToPrint } from "react-to-print";
 import { useNavigate } from "react-router-dom";
+import {useGetUserInfo} from "./hooks/useGetUserInfo"
 
 const DisplayData = ({
   productName,
@@ -32,10 +33,10 @@ const DisplayData = ({
   data,
   setData,
 }) => {
-
+  const {userEmail} = useGetUserInfo()
   const navigate = useNavigate();
   // Create Database Reference
-  const dbRef = collection(db, "Products");
+  const dbRef = collection(db, "Users", userEmail, "Products");
   const fetch = async () => {
     const snapshot = await getDocs(query(dbRef, orderBy("createdAt", "desc")));
     const fetchData = snapshot.docs.map((doc) => ({
