@@ -3,8 +3,14 @@ import React, { useState } from "react";
 import AddForm from "./AddForm";
 import DisplayData from "./DisplayData";
 import { Toaster } from "react-hot-toast";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import Auth from "./Auth";
+import { useGetUserInfo } from "./hooks/useGetUserInfo";
 
 const App = () => {
   const [productName, setProductName] = useState();

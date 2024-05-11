@@ -8,7 +8,7 @@ import {
 import React, { useState } from "react";
 import { auth, db } from "./firebase";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
 import { signOut } from "firebase/auth";
 
@@ -32,10 +32,10 @@ const AddForm = ({
   data,
   setData,
 }) => {
-  const { userEmail, userId } = useGetUserInfo();
+  const { userEmail, userId, isAuth } = useGetUserInfo();
   const navigate = useNavigate();
-  if (!userId) {
-    navigate("/");
+  if (!isAuth){ 
+    return <Navigate to="/" />
   }
   // Categories
   const handleCategoryChange = (e) => setCategory(e.target.value);

@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { auth, db } from "./firebase";
 import toast from "react-hot-toast";
 import { useReactToPrint } from "react-to-print";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
 import { signOut } from "firebase/auth";
 
@@ -35,16 +35,14 @@ const DisplayData = ({
   data,
   setData,
 }) => {
-  const { userEmail, userId } = useGetUserInfo();
+  const { userEmail, userId, isAuth } = useGetUserInfo();
   const navigate = useNavigate();
   // Create Database Reference
-  if (!userId) {
-    navigate("/");
-  }
-  const dbRef = collection(db, "Users", userEmail, "Products");
+
+
   const fetch = async () => {
     const snapshot = await getDocs(
-      query(dbRef, where("userId", "==", userId), orderBy("createdAt", "desc"))
+      query(collection(db, "Users", userEmail, "Products"), where("userId", "==", userId), orderBy("createdAt", "desc"))
     );
     const fetchData = snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -55,8 +53,11 @@ const DisplayData = ({
 
   // Use effect to call it once
   useEffect(() => {
+    if (!isAuth){ 
+      navigate("/")
+    }
     fetch();
-  }, []);
+  });
 
   // Edit data
   const editData = async (id) => {
@@ -76,7 +77,7 @@ const DisplayData = ({
 
   // Delete data from database
   const deleteData = async (id) => {
-    const delRef = doc(dbRef, id);
+    const delRef = doc(collection(db, "Users", userEmail, "Products"), id);
     try {
       await deleteDoc(delRef).then(() => {
         toast.error("Product deleted successfully");
