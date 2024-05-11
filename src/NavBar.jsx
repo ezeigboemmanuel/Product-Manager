@@ -1,9 +1,10 @@
 import React from "react";
 import Logo from "./images/logo.png";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, provider } from "./firebase";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
+import toast from "react-hot-toast";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const NavBar = () => {
     };
     localStorage.setItem("auth", JSON.stringify(authInfo));
     navigate("/addproduct");
+    toast.success("Signed in successfully");
   };
 
   const signUserOut = async () => {
@@ -27,6 +29,7 @@ const NavBar = () => {
       await signOut(auth);
       localStorage.clear();
       navigate("/");
+      toast.success("Signed out successfully");
     } catch (error) {
       console.log(error, "An error occured while signing out");
     }

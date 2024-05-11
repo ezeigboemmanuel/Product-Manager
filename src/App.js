@@ -7,11 +7,8 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  useNavigate,
 } from "react-router-dom";
 import Auth from "./Auth";
-import { useGetUserInfo } from "./hooks/useGetUserInfo";
-import NavBar from "./NavBar";
 
 const App = () => {
   const [productName, setProductName] = useState();
@@ -49,9 +46,7 @@ const App = () => {
                 isAvailable={isAvailable}
                 setIsAvailable={setIsAvailable}
                 id={id}
-                setId={setId}
                 data={data}
-                setData={setData}
               />
             }
           />
@@ -60,21 +55,13 @@ const App = () => {
             exact
             element={
               <DisplayData
-                productName={productName}
                 setProductName={setProductName}
-                brand={brand}
                 setBrand={setBrand}
-                price={price}
                 setPrice={setPrice}
-                category={category}
                 setCategory={setCategory}
-                weight={weight}
                 setWeight={setWeight}
-                color={color}
                 setColor={setColor}
-                isAvailable={isAvailable}
                 setIsAvailable={setIsAvailable}
-                id={id}
                 setId={setId}
                 data={data}
                 setData={setData}

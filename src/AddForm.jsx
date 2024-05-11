@@ -5,12 +5,11 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import React, { useState } from "react";
-import { auth, db } from "./firebase";
+import React from "react";
+import { db } from "./firebase";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
-import { signOut } from "firebase/auth";
 import NavBar from "./NavBar";
 
 const AddForm = ({
@@ -29,12 +28,12 @@ const AddForm = ({
   isAvailable,
   setIsAvailable,
   id,
-  setId,
   data,
-  setData,
 }) => {
-  const { userEmail, userId, isAuth } = useGetUserInfo();
   const navigate = useNavigate();
+
+  // Get current user information from the custom hook
+  const { userEmail, userId, isAuth } = useGetUserInfo();
   if (!isAuth) {
     return <Navigate to="/" />;
   }
@@ -49,13 +48,10 @@ const AddForm = ({
 
   // ======= Database Part =======
 
-  // create a db reference
-  const dbRef = collection(db, "Users", userEmail, "Products");
-
   // Store data to database
   const addDataFunc = async () => {
     try {
-      await addDoc(dbRef, {
+      await addDoc(collection(db, "Users", userEmail, "Products"), {
         userId: userId,
         ProductName: productName,
         Brand: brand,
@@ -77,7 +73,7 @@ const AddForm = ({
   // Update Data
   const updateData = async () => {
     try {
-      const updateRef = doc(dbRef, id);
+      const updateRef = doc(collection(db, "Users", userEmail, "Products"), id);
       await updateDoc(updateRef, {
         userId: userId,
         ProductName: productName,
@@ -97,15 +93,6 @@ const AddForm = ({
     }
   };
 
-  const signUserOut = async () => {
-    try {
-      await signOut(auth);
-      localStorage.clear();
-      navigate("/");
-    } catch (error) {
-      console.log(error, "An error occured while signing out");
-    }
-  };
   return (
     <div>
       <NavBar />

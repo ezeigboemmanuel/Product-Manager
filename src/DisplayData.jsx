@@ -7,43 +7,36 @@ import {
   orderBy,
   where,
 } from "firebase/firestore";
-import React, { useEffect, useRef, useState } from "react";
-import { auth, db } from "./firebase";
+import React, { useEffect, useRef } from "react";
+import { db } from "./firebase";
 import toast from "react-hot-toast";
 import { useReactToPrint } from "react-to-print";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
-import { signOut } from "firebase/auth";
 import NavBar from "./NavBar";
 
 const DisplayData = ({
-  productName,
   setProductName,
-  brand,
   setBrand,
-  price,
   setPrice,
-  category,
   setCategory,
-  weight,
   setWeight,
-  color,
   setColor,
-  isAvailable,
   setIsAvailable,
-  id,
   setId,
   data,
   setData,
 }) => {
-  const { userEmail, userId, isAuth } = useGetUserInfo();
   const navigate = useNavigate();
+  const { userEmail, userId, isAuth } = useGetUserInfo(); // user Info
   // Create Database Reference
-
-
   const fetch = async () => {
     const snapshot = await getDocs(
-      query(collection(db, "Users", userEmail, "Products"), where("userId", "==", userId), orderBy("createdAt", "desc"))
+      query(
+        collection(db, "Users", userEmail, "Products"),
+        where("userId", "==", userId),
+        orderBy("createdAt", "desc")
+      )
     );
     const fetchData = snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -54,8 +47,8 @@ const DisplayData = ({
 
   // Use effect to call it once
   useEffect(() => {
-    if (!isAuth){ 
-      navigate("/")
+    if (!isAuth) {
+      navigate("/");
     }
     fetch();
   });
@@ -97,16 +90,6 @@ const DisplayData = ({
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-
-  const signUserOut = async () => {
-    try {
-      await signOut(auth);
-      localStorage.clear();
-      navigate("/");
-    } catch (error) {
-      console.log(error, "An error occured while signing out");
-    }
-  };
 
   return (
     <div>
