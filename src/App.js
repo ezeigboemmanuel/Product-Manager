@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import Auth from "./Auth";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
+import NavBar from "./NavBar";
 
 const App = () => {
   const [productName, setProductName] = useState();
@@ -83,7 +84,7 @@ const App = () => {
         </Routes>
       </Router>
 
-      <p className="mt-4 mr-4 text-right">
+      <p className="m-4 text-right">
         Made by{" "}
         <a
           href="https://twitter.com/zgbocode"

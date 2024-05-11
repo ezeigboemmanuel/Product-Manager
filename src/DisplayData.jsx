@@ -14,6 +14,7 @@ import { useReactToPrint } from "react-to-print";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
 import { signOut } from "firebase/auth";
+import NavBar from "./NavBar";
 
 const DisplayData = ({
   productName,
@@ -116,7 +117,7 @@ const DisplayData = ({
 "
         }
       </style>
-      <button onClick={signUserOut}>Sign Out</button>
+      <NavBar />
       <div
         ref={componentRef}
         className="relative overflow-x-auto shadow-md sm:rounded-lg mb-20"

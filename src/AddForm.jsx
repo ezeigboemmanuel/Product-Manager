@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useGetUserInfo } from "./hooks/useGetUserInfo";
 import { signOut } from "firebase/auth";
+import NavBar from "./NavBar";
 
 const AddForm = ({
   productName,
@@ -34,8 +35,8 @@ const AddForm = ({
 }) => {
   const { userEmail, userId, isAuth } = useGetUserInfo();
   const navigate = useNavigate();
-  if (!isAuth){ 
-    return <Navigate to="/" />
+  if (!isAuth) {
+    return <Navigate to="/" />;
   }
   // Categories
   const handleCategoryChange = (e) => setCategory(e.target.value);
@@ -107,7 +108,7 @@ const AddForm = ({
   };
   return (
     <div>
-      <button onClick={signUserOut}>Sign Out</button>
+      <NavBar />
       <section className="bg-white">
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-gray-900">
