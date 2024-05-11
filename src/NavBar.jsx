@@ -41,10 +41,10 @@ const NavBar = () => {
           <a href="/" className="flex items-center -ml-5">
             <img src={Logo} className="h-20" alt="ProdEz Logo" />
           </a>
-          <div className="flex space-x-3">
+          {isAuth && <div className="flex space-x-3">
             <a href="/addproduct" className="font-medium cursor-pointer hover:text-blue-500 active:text-blue-500">Add Product</a>
             <a href="/products" className="font-medium cursor-pointer hover:text-blue-500 active:text-blue-500 mr-3">Products</a>
-          </div>
+          </div>}
           <div className="flex items-center lg:order-2">
             <button
               onClick={isAuth ? signUserOut : signInWithGoogle}
