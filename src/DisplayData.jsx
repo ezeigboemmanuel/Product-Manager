@@ -51,7 +51,7 @@ const DisplayData = ({
       navigate("/");
     }
     fetch();
-  });
+  }, []);
 
   // Edit data
   const editData = async (id) => {
